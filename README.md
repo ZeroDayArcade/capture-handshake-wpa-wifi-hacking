@@ -62,7 +62,7 @@ ctools.crack_handshake(mic, mac_ap, mac_cl, bytes(essid, 'utf-8'), nonce_ap, non
 ```
 to capture *and* crack the handshake when you run `capture_handshake.py`.
 
-You do this when cracking with message 4 data instead of running `crack_handshake.py` with a hash line because `crack_handshake.py` pulls `nonce_cl` from the `eapol_client` part of the hash line before running the cracking function. Pulling `nonce_cl` from the `eapol_client` part of the hash line works when cracking with message 2 because `nonce_cl` is included in `eapol_client` in message 2, but `nonce_cl` is not in `eapol_client` in the 4th message and thus `nonce_cl` must be passed in explicitly.
+You do this when cracking with message 4 data instead of running `crack_handshake.py` with a hash line because `crack_handshake.py` pulls `nonce_cl` from the `eapol_client` part of the hash line before running the cracking function. Doing this works when cracking with message 2 because `nonce_cl` is included in `eapol_client` in message 2, but `nonce_cl` is not in `eapol_client` in the 4th message and thus `nonce_cl` must be passed in explicitly.
 <br/>
 
 # More Zero Day Arcade Tutorials:
