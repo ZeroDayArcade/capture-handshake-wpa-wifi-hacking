@@ -31,7 +31,7 @@ sudo iwconfig wlan1 mode monitor
 ```
 sudo ifconfig wlan1 up
 ```
-With a WiFi network setup up for penetration testing, you can run this script to capture a handshake and crack the resulting hash line to get the password of the network. Let's say you've set up a test WiFi network with SSID = `ZDA WiFi` and password = `12345678` on your test router or ESP8266 NodeMCU access point (and have WiFi interface `wlan1` for your WiFi adapter). You can run this script and wait for a handshake with:
+With a WiFi network setup up for penetration testing, you can run this script to capture a handshake and crack the resulting hash line to get the password of the network. Let's say you've set up a test WiFi network with SSID = `ZDA WiFi` and password = `12345678` on a test router or a ESP8266 NodeMCU access point. Before you run the script, verify that you can connect to the AP with the password `12345678` on a seperate device such as a phone or with the internal WiFi adapter of your computer (the one you're not using for monitor mode!). Once you've confirmed the AP is set up correctly and you can connect to it, disconnect your phone/extra device from the AP for the test. Then run `capture_handshake.py` and wait for a handshake with:
 ```
 sudo python3 capture_handshake.py wlan1 "ZDA WiFi"
 ```
@@ -39,8 +39,21 @@ sudo python3 capture_handshake.py wlan1 "ZDA WiFi"
 ```
 sudo python3 capture_handshake.py wlan1 "ZDA WiFi" <MAC_ADDRESS_AP>
 ```
-This will listen for devices connecting to `ZDA WiFi`. To test it, connect to the network with the known password `12345678` on a seperate device or WiFi interface like your phone or your computer's built in WiFi interface. When you do, the script will take packets/frames from the 4-way handshake and then print a hashcat hc22000 format hash line in Terminal once captured. The hash line will also be saved/create a file named hashline.txt containing the hash line from the captured handshake. You can then use that hash line with hashcat or our <a href="https://github.com/ZeroDayArcade/cracking-wpa-with-handshake">handshake cracking script</a> to crack the password of the network which should yield the `12345678` password in this example. Of course you can always have someone else set the password so you don't know what it is before hand, and then try to capture and crack a handshake from the network for the unknown password.
+This will listen for devices connecting to `ZDA WiFi`. Reconnect to the network with your seperate device. When you do, the script will take packets/frames from the 4-way handshake and then print a hashcat hc22000 format hash line in Terminal once captured. The hash line will also be saved/create a file named hashline.txt containing the hash line from the captured handshake. You can then use that hash line with hashcat or our <a href="https://github.com/ZeroDayArcade/cracking-wpa-with-handshake">handshake cracking script</a> to crack the password of the network which should yield the `12345678` password in this example. Of course you can always have someone else set the password so you don't know what it is before hand, and then try to capture and crack a handshake from the network for the unknown password.
 
+## Using a Half-Handshake vs. Full Handshake
+
+The script will construct the hash line from the first 2 messages of the handshake. This is sufficient in most cases. Assuming the connecting device (phone/extra device in the example above) is connecting with the correct password, it will be possible to crack the resulting hash line to get the real password of the network. If the connecting device attempts to connect with the wrong password, the script will run normally but the hash line will obviously not contain the real password. 
+
+You can easily modify the script to use the `mic` and `eapol_client` from the 4th message instead. If you are cracking the handshake with `crack_handshake.py` from the <a href="https://github.com/ZeroDayArcade/cracking-wpa-with-handshake">Cracking WPA/WPA2 WiFi Passwords from a Captured Handshake</a> repo, you'll need to pass in all the variables to `crack_handshake()` explicitly instead of constructing a hash line. 
+
+For example, if `crack_handshake.py` is in the same directory as `capture_handshake.py`, you can add the following lines to `capture_handshake.py` under `elif message_num == 4 and data_from_cl:`
+```
+import crack_handshake as ctools
+eapol_client = b''.join([eapol_frame_before_mic, bytearray(16), wpa_length])
+ctools.crack_handshake(mic, mac_ap, mac_cl, bytes(essid, 'utf-8'), nonce_ap, nonce_cl, eapol_client)
+```
+You do this when cracking with message 4 instead of running `crack_handshake.py` with a hash line because `crack_handshake.py` pulls `nonce_cl` from the `eapol_client` part of the hash line before running the cracking function. Pulling `nonce_cl` from the `eapol_client` part of the hash line works when cracking with message 2 because `nonce_cl` is included in `eapol_client` in message 2, but `nonce_cl` is not in `eapol_client` in the 4th message and thus `nonce_cl` must be passed in explicitly.
 <br/>
 
 # More Zero Day Arcade Tutorials:
