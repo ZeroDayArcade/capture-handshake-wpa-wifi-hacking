@@ -51,7 +51,7 @@ This will listen for devices connecting to `ZDA WiFi`. Reconnect to the network 
 
 The script will construct the hash line from the first 2 messages of the handshake. This is sufficient in most cases. Assuming the connecting device (phone/extra device in the example above) is connecting with the correct password, it will be possible to crack the resulting hash line to get the real password of the network. If the connecting device attempts to connect with the wrong password, the script will run normally but the hash line will obviously not contain the real password. 
 
-You can easily modify the script to use the `mic` and `eapol_client` from the 4th message instead. If you are cracking the handshake with `crack_handshake.py` and `passlist.txt` from the <a href="https://github.com/ZeroDayArcade/cracking-wpa-with-handshake">Cracking WPA/WPA2 WiFi Passwords from a Captured Handshake</a> repo, you'll need to pass in all the variables to `crack_handshake()` explicitly instead of constructing a hash line. 
+You can easily modify the script to use the `mic` and `eapol_client` from the 4th message instead. If you want to use the data from the 4th message and still crack the handshake with `crack_handshake.py` and `passlist.txt` from the <a href="https://github.com/ZeroDayArcade/cracking-wpa-with-handshake">Cracking WPA/WPA2 WiFi Passwords from a Captured Handshake</a> repo, you'll need to pass in all the variables to `crack_handshake()` explicitly instead of using the hash line.
 
 For example, if `crack_handshake.py` and `passlist.txt` are in the same directory as `capture_handshake.py`, you can add the following lines to `capture_handshake.py` under `elif message_num == 4 and data_from_cl:`
 ```
