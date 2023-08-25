@@ -51,15 +51,18 @@ This will listen for devices connecting to `ZDA WiFi`. Reconnect to the network 
 
 The script will construct the hash line from the first 2 messages of the handshake. This is sufficient in most cases. Assuming the connecting device (phone/extra device in the example above) is connecting with the correct password, it will be possible to crack the resulting hash line to get the real password of the network. If the connecting device attempts to connect with the wrong password, the script will run normally but the hash line will obviously not contain the real password. 
 
-You can easily modify the script to use the `mic` and `eapol_client` from the 4th message instead. If you are cracking the handshake with `crack_handshake.py` from the <a href="https://github.com/ZeroDayArcade/cracking-wpa-with-handshake">Cracking WPA/WPA2 WiFi Passwords from a Captured Handshake</a> repo, you'll need to pass in all the variables to `crack_handshake()` explicitly instead of constructing a hash line. 
+You can easily modify the script to use the `mic` and `eapol_client` from the 4th message instead. If you are cracking the handshake with `crack_handshake.py` and `passlist.txt` from the <a href="https://github.com/ZeroDayArcade/cracking-wpa-with-handshake">Cracking WPA/WPA2 WiFi Passwords from a Captured Handshake</a> repo, you'll need to pass in all the variables to `crack_handshake()` explicitly instead of constructing a hash line. 
 
-For example, if `crack_handshake.py` is in the same directory as `capture_handshake.py`, you can add the following lines to `capture_handshake.py` under `elif message_num == 4 and data_from_cl:`
+For example, if `crack_handshake.py` and `passlist.txt` are in the same directory as `capture_handshake.py`, you can add the following lines to `capture_handshake.py` under `elif message_num == 4 and data_from_cl:`
 ```
+sys.argv = [sys.argv[0]]
 import crack_handshake as ctools
 eapol_client = b''.join([eapol_frame_before_mic, bytearray(16), wpa_length])
 ctools.crack_handshake(mic, mac_ap, mac_cl, bytes(essid, 'utf-8'), nonce_ap, nonce_cl, eapol_client)
 ```
-You do this when cracking with message 4 instead of running `crack_handshake.py` with a hash line because `crack_handshake.py` pulls `nonce_cl` from the `eapol_client` part of the hash line before running the cracking function. Pulling `nonce_cl` from the `eapol_client` part of the hash line works when cracking with message 2 because `nonce_cl` is included in `eapol_client` in message 2, but `nonce_cl` is not in `eapol_client` in the 4th message and thus `nonce_cl` must be passed in explicitly.
+to capture *and* crack the handshake when you run `capture_handshake.py`.
+
+You do this when cracking with message 4 data instead of running `crack_handshake.py` with a hash line because `crack_handshake.py` pulls `nonce_cl` from the `eapol_client` part of the hash line before running the cracking function. Pulling `nonce_cl` from the `eapol_client` part of the hash line works when cracking with message 2 because `nonce_cl` is included in `eapol_client` in message 2, but `nonce_cl` is not in `eapol_client` in the 4th message and thus `nonce_cl` must be passed in explicitly.
 <br/>
 
 # More Zero Day Arcade Tutorials:
