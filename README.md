@@ -8,7 +8,7 @@ This script will produce hash lines in the hashcat hc22000 format that can be cr
 
 You will need a WiFi adapter capable of monitor mode. I tested this with three different adaptors including <a href="https://www.amazon.com/GenBasic-Wireless-Network-Dongle-Adapter/dp/B0BNFKJPXS/">this one for less than $10 on Amazon</a>. I recomend running this script on a Linux distribution, and have successfully tested it with Kali Linux on Intel and Raspian on a Raspberry Pi 4 (ARM). If you are running macOS or Windows, then you can use the script with a Virtual Machine running Kali or other distributions with VirtualBox or VMWare. 
 
-***Reminder:** Only ever hack a network that you own and have legal permission to hack. Any hacking skills/knowledge gained from this repository should only be used in the context of security research, penetration testing, password recovery, and education.* 
+***Reminder:** Only ever hack a network that you own and have legal permission to hack. Any hacking skills/knowledge gained from this repository should only be used within the context of security research, penetration testing, password recovery, and education.* 
 
 ## Setting up a test WiFi Network
 
