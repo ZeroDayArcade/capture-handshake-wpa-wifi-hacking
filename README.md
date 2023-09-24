@@ -74,8 +74,6 @@ You do this when cracking with message 4 data instead of running `crack_handshak
 <a href="https://github.com/ZeroDayArcade/wpa-password-cracking-with-pmkid">Cracking WiFi Passwords with PMKID</a>   
 <a href="https://github.com/ZeroDayArcade/cracking-wpa-with-handshake">Cracking WPA/WPA2 Passwords with 4-Way Handshake</a>  
 
-# Find Hacking Bounties in Gaming:
-🎮  <a href="https://zerodayarcade.com/bounties">zerodayarcade.com/bounties</a>
 
 
 
